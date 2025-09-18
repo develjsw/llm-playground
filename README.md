@@ -30,7 +30,7 @@
 
 
 ### LangChain, LangGraph에 대한 설명
-  - LangChain, LangGraph : AI를 더 편하게 사용할 수 있도록 여러가지 기능을 제공하는 프레임워크로
+  - LangChain, LangGraph : AI를 더 편하게 사용할 수 있도록 여러가지 기능을 제공하는 프레임워크
   - LangChain : ★ 충분히 학습 후 작성 예정 ★
   - LangGraph : ★ 충분히 학습 후 작성 예정 ★
 
