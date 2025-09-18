@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "target": "ES2024",         // 최신 ECMAScript 2024 문법까지 지원 (top-level await 등 최신 기능 사용 가능)
+    "module": "ESNext",         // ECMAScript Module 형식으로 컴파일 (import/export, 최신 표준 모듈 시스템)
+    "moduleResolution": "Node"  // Node.js 방식으로 모듈 경로 해석 (node_modules 기준 탐색)
+  },
+}

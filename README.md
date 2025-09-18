@@ -22,6 +22,17 @@
     ```shell
     $ npm install dotenv
     ```
+  - tsconfig.json 파일 생성 후 값 입력
+    - 위에 작업만으로 문제없이 동작하나 IDE에서 에러로 인식하지 않도록 최소한의 설정만 적용 
+      ```tsconfig.json
+      {
+        "compilerOptions": {
+        "target": "ES2024",
+        "module": "ESNext",
+        "moduleResolution": "Node"
+        },
+      }
+      ```
 
 
 ### RAG에 대한 설명
