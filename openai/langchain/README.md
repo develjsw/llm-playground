@@ -65,5 +65,5 @@
     ```shell
     프로젝트 루트 디렉토리 위치$ npx tsx [실행시킬 파일 경로 + 파일명]
     
-    EX) llm-playground$ npx tsx openai/langchain/version/v1/openai/create-an-agent.ts  
+    EX) llm-playground$ npx tsx openai/langchain/version/v1/openai/agent-tool-greetings.ts  
     ```
