@@ -131,78 +131,78 @@
         id: "message_12345" // 개발자가 직접 지정하는 값으로 별도로 로그 적재하고 추적할 수 있도록 만들기 위한 기능
     });
     ```
-  - AI Message : 모델 호출의 출력을 나타냄. 여기에는 나중에 액세스할 수 있는 다중 모드 데이터, 도구 호출 및 공급자별 메타데이터가 포함될 수 있음
-      ```ts
-      // 모델 설정 생략..
+- AI Message : 모델 호출의 출력을 나타냄. 여기에는 나중에 액세스할 수 있는 다중 모드 데이터, 도구 호출 및 공급자별 메타데이터가 포함될 수 있음
+    ```ts
+    // 모델 설정 생략..
   
-      const response = await model.invoke("개발자는 보통 무슨일을 하니?");
+    const response = await model.invoke("개발자는 보통 무슨일을 하니?");
 
-      (response instanceof AIMessage)
-          ? console.log("AIMessage 타입 일치")
-          : console.log("AIMessage 타입 불일치")
-      ```
-      - 모델을 호출하면 → AIMessage 객체가 결과로 리턴됨
-      - 이 객체 안에는 응답 텍스트(content) + 메타데이터(metadata) 가 함께 들어있음
-      - 단, AIMessage는 모델 응답으로만 만들어지는 게 아님
-        - 필요하다면 개발자가 직접 생성(`new AIMessage(...)`)하거나, 기존 객체를 가공해서(`metadata 추가 등`) 다시 사용할 수도 있음
-      - 경우에 따라서는 모델이 실제로 응답하지 않았더라도, AI가 답한 것처럼 직접 AIMessage를 만들어 히스토리에 넣는 게 유용할 수 있음
-        - EX) DB 조회, 비즈니스 로직 처리, 외부 API 호출 결과를 AI가 말한 것처럼 맥락에 반영하고 싶을 때 AIMessage에 해당 내용 넣어서 사용
-        - 이렇게 진행하면 모델은 이후 대화를 이어갈 때, 해당 응답이 이미 AI가 말한 대화 내용이라고 인식하고 자연스럽게 이어감
-          ```ts
-          // 모델 설정 생략..
+    (response instanceof AIMessage)
+        ? console.log("AIMessage 타입 일치")
+        : console.log("AIMessage 타입 불일치")
+    ```
+    - 모델을 호출하면 → AIMessage 객체가 결과로 리턴됨
+    - 이 객체 안에는 응답 텍스트(content) + 메타데이터(metadata) 가 함께 들어있음
+    - 단, AIMessage는 모델 응답으로만 만들어지는 게 아님
+      - 필요하다면 개발자가 직접 생성(`new AIMessage(...)`)하거나, 기존 객체를 가공해서(`metadata 추가 등`) 다시 사용할 수도 있음
+    - 경우에 따라서는 모델이 실제로 응답하지 않았더라도, AI가 답한 것처럼 직접 AIMessage를 만들어 히스토리에 넣는 게 유용할 수 있음
+      - EX) DB 조회, 비즈니스 로직 처리, 외부 API 호출 결과를 AI가 말한 것처럼 맥락에 반영하고 싶을 때 AIMessage에 해당 내용 넣어서 사용
+      - 이렇게 진행하면 모델은 이후 대화를 이어갈 때, 해당 응답이 이미 AI가 말한 대화 내용이라고 인식하고 자연스럽게 이어감
+        ```ts
+        // 모델 설정 생략..
         
-          const aiMessage1 = new AIMessage("제대로된 도움을 드리기 위해 회원정보를 조회할 수 있는 이메일을 입력해주세요.");
+        const aiMessage1 = new AIMessage("제대로된 도움을 드리기 위해 회원정보를 조회할 수 있는 이메일을 입력해주세요.");
 
-          // DB에서 가져온 데이터라 가정
-          const userInfoFromDb = { userId: 1001, name: "홍길동", email: "aaa@gmail.com", address: "서울시 강남구 개포동", totalPoint: 999999 };
+        // DB에서 가져온 데이터라 가정
+        const userInfoFromDb = { userId: 1001, name: "홍길동", email: "aaa@gmail.com", address: "서울시 강남구 개포동", totalPoint: 999999 };
     
-          const aiMessage2 = new AIMessage(`${userInfoFromDb.name}님 반가워요~ 필요한 도움을 말씀해주세요.`);
+        const aiMessage2 = new AIMessage(`${userInfoFromDb.name}님 반가워요~ 필요한 도움을 말씀해주세요.`);
     
-          const messages = [
-              new SystemMessage("당신은 회원들에게 도움을 주는 챗봇입니다."),
-              new HumanMessage("나좀 도와줄 수 있니?"),
-              aiMessage1,
-              new HumanMessage("aaa@gmail.com 이거야."),
-              aiMessage2,
-              new HumanMessage("혹시 내 포인트 총액이 얼마 남았니?")
-          ];
+        const messages = [
+            new SystemMessage("당신은 회원들에게 도움을 주는 챗봇입니다."),
+            new HumanMessage("나좀 도와줄 수 있니?"),
+            aiMessage1,
+            new HumanMessage("aaa@gmail.com 이거야."),
+            aiMessage2,
+            new HumanMessage("혹시 내 포인트 총액이 얼마 남았니?")
+        ];
     
-          const response = await model.invoke(messages);
-          ```
-      - 도구 호출 응답
-        - 모델이 tool 호출을 하면 AIMessage에 포함됨
-          ```ts
-          // 모델 설정 생략..
+        const response = await model.invoke(messages);
+        ```
+    - 도구 호출 응답
+      - 모델이 tool 호출을 하면 AIMessage에 포함됨
+        ```ts
+        // 모델 설정 생략..
 
-          // tool 설정 생략..
+        // tool 설정 생략..
 
-          const modelWithTools = model.bindTools([getTodayWeather]);
+        const modelWithTools = model.bindTools([getTodayWeather]);
 
-          const response = await modelWithTools.invoke("날씨좀 알려줘.");
+        const response = await modelWithTools.invoke("날씨좀 알려줘.");
 
-          for (const toolCall of response.tool_calls) {
-              console.log(`Name : ${toolCall.name}`);
-              console.log(`Args : ${JSON.stringify(toolCall.args)}`);
-              console.log(`Id : ${toolCall.id}`);
-          }
-          ```
-      - 스트리밍 및 청크
-        - 스트리밍하는 동안 전체 메시지로 결합할 수 있는 AIMessageChunk 객체를 받게됨
-          ```ts
-          import { initChatModel, AIMessageChunk } from "langchain";
+        for (const toolCall of response.tool_calls) {
+            console.log(`Name : ${toolCall.name}`);
+            console.log(`Args : ${JSON.stringify(toolCall.args)}`);
+            console.log(`Id : ${toolCall.id}`);
+        }
+        ```
+    - 스트리밍 및 청크
+      - 스트리밍하는 동안 전체 메시지로 결합할 수 있는 AIMessageChunk 객체를 받게됨
+        ```ts
+        import { initChatModel, AIMessageChunk } from "langchain";
     
-          const model = await initChatModel("openai:gpt-5-nano");
+        const model = await initChatModel("openai:gpt-5-nano");
     
-          const stream = await model.stream("안녕하세요?");
+        const stream = await model.stream("안녕하세요?");
     
-          let finalChunk: AIMessageChunk | undefined;
-          for await (const chunk of stream) {
-              // concat 메서드는 AIMessageChunk에 구현된 병합 로직으로,
-              // content 문자열은 이어 붙이고, tool_calls/metadata 등 다른 필드도 규칙에 맞게 합쳐줌
-              finalChunk = finalChunk ? finalChunk.concat(chunk) : chunk;
-          }
-          console.log(finalChunk);    
-          ```
+        let finalChunk: AIMessageChunk | undefined;
+        for await (const chunk of stream) {
+            // concat 메서드는 AIMessageChunk에 구현된 병합 로직으로,
+            // content 문자열은 이어 붙이고, tool_calls/metadata 등 다른 필드도 규칙에 맞게 합쳐줌
+            finalChunk = finalChunk ? finalChunk.concat(chunk) : chunk;
+        }
+        console.log(finalChunk);    
+        ```
 - Tool Message : 모델이 도구 호출을 하면 AI 메시지에 포함됨
     
 
