@@ -112,3 +112,73 @@
     ```
 
 ### batch
+- 여러개의 독립된 요청을 한번에 묶어서(model에 동시에 보내서) 처리하는 방식
+  - 독립적인 요청 : 서로 연관이 없는 질문이나 입력들 EX) "서울의 날씨 알려줘", "파리 인구는 어느정도 되니?", "현재 미국 대통령이 누구니?"
+  - 병렬 처리 : 요청들을 하나씩 순서대로 보내는 대신(model.invoke 방식), 묶어서 한 번에 병렬 처리하는 방식
+- 장점 : 
+  - 성능 향상 : 동시에 병렬 처리하기 때문에 응답 시간이 크게 향상됨
+  - 비용 절감 : API 호출마다 부가적인 네트워크/요청 비용 발생하는 데 이 부분이 줄어들어 비용이 절감됨
+
+  ```ts
+  import { initChatModel } from "langchain";
+  
+  const model = await initChatModel("openai:gpt-5-nano");
+  
+  const responses = await model.batch([
+      "백엔드 개발자는 어떤 언어들을 사용하나요?",
+      "프론트엔드 개발자는 어떤 언어들을 사용하나요?",
+      "LangChain은 무엇인가요?",
+      "LangGraph는 무엇인가요?",
+      "LangSmith는 무엇인가요?"
+  ]);
+  /*
+    [
+        AIMessage {},
+        AIMessage {},
+        AIMessage {},
+        AIMessage {},
+        AIMessage {}
+    ]
+  */
+  
+  for (const response of responses) {
+      console.log(response);
+  }
+  /*
+      AIMessage {},
+      AIMessage {},
+      AIMessage {},
+      AIMessage {},
+      AIMessage {}
+  */
+  ```
+  - 병렬처리 가능 개수 설정
+    ```ts
+    const model = await initChatModel("openai:gpt-5-nano");
+
+    const questions = [
+        "백엔드 개발자는 어떤 언어들을 사용하나요?",
+        "프론트엔드 개발자는 어떤 언어들을 사용하나요?",
+        "LangChain은 무엇인가요?",
+        "LangGraph는 무엇인가요?",
+        "LangSmith는 무엇인가요?"
+    ];
+  
+    const responses = await model.batch(
+        questions,
+        {
+            maxConcurrency: 3 // 병렬처리 가능 개수 설정
+        }
+    );
+  
+    for (const response of responses) {
+        console.log(response);
+    }
+    /*
+        AIMessage {},
+        AIMessage {},
+        AIMessage {},
+        AIMessage {},
+        AIMessage {}
+    */
+    ```
